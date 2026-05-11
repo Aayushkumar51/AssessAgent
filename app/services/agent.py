@@ -21,13 +21,18 @@ load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-if not GROQ_API_KEY:
-    raise ValueError("GROQ_API_KEY not found in .env")
+_groq_client = None
 
 
-client = Groq(
-    api_key=GROQ_API_KEY
-)
+def _get_groq_client():
+    """Lazy client so the API process can start without a key (e.g. /health on Render)."""
+    global _groq_client
+    if _groq_client is not None:
+        return _groq_client
+    if not GROQ_API_KEY:
+        return None
+    _groq_client = Groq(api_key=GROQ_API_KEY)
+    return _groq_client
 
 
 # =========================================================
@@ -189,6 +194,10 @@ def fallback_agent(conversation_text):
 
 
 def run_agent(conversation_text):
+
+    client = _get_groq_client()
+    if client is None:
+        return fallback_agent(conversation_text)
 
     try:
 

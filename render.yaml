@@ -1,0 +1,16 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Root Directory: leave default (repo root). Do not set to "app" or imports break.
+
+services:
+  - type: web
+    name: shl-assessment-api
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: PYTHONPATH=. uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.13"
+      - key: GROQ_API_KEY
+        sync: false
