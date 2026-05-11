@@ -2,9 +2,9 @@
 
 import streamlit as st
 import requests
+from client.config import API_URL
 
 
-API_URL = "http://127.0.0.1:8000/chat"
 
 st.set_page_config(
     page_title="SHL Assessment Recommender",
