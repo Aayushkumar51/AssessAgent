@@ -8,9 +8,7 @@ from app.services.conversation import (
 )
 
 
-# =========================================================
-# FILTER + RANK RESULTS
-# =========================================================
+
 
 def filter_results(results, query):
 
@@ -27,22 +25,17 @@ def filter_results(results, query):
         {' '.join(item['job_levels'])}
         """.lower()
 
-        # ---------------------------------------------
-        # Base FAISS score
-        # ---------------------------------------------
+      
 
         score = item["score"]
 
-        # ---------------------------------------------
-        # Java boost
-        # ---------------------------------------------
+       
+     
 
         if "java" in query_lower and "java" in text:
             score += 0.30
 
-        # ---------------------------------------------
-        # Personality boost
-        # ---------------------------------------------
+       
 
         if "personality" in query_lower:
 
@@ -53,18 +46,14 @@ def filter_results(results, query):
             ):
                 score += 0.30
 
-        # ---------------------------------------------
-        # Communication boost
-        # ---------------------------------------------
+        
 
         if "communication" in query_lower:
 
             if "communication" in text:
                 score += 0.20
 
-        # ---------------------------------------------
-        # Manager boost
-        # ---------------------------------------------
+      
 
         if "manager" in query_lower:
 
@@ -74,9 +63,7 @@ def filter_results(results, query):
             ):
                 score += 0.20
 
-        # ---------------------------------------------
-        # Developer boost
-        # ---------------------------------------------
+        
 
         if "developer" in query_lower:
 
@@ -87,26 +74,19 @@ def filter_results(results, query):
             ):
                 score += 0.20
 
-        # ---------------------------------------------
-        # Graduate boost
-        # ---------------------------------------------
+     
 
         if "graduate" in query_lower:
 
             if "graduate" in text:
                 score += 0.20
 
-        # ---------------------------------------------
-        # Update score
-        # ---------------------------------------------
 
         item["score"] = score
 
         ranked_results.append(item)
 
-    # -------------------------------------------------
-    # Sort by updated score
-    # -------------------------------------------------
+   
 
     ranked_results.sort(
         key=lambda x: x["score"],
@@ -116,24 +96,17 @@ def filter_results(results, query):
     return ranked_results
 
 
-# =========================================================
-# GENERATE RECOMMENDATIONS
-# =========================================================
+
 
 def generate_recommendations(query):
 
-    # -------------------------------------------------
-    # Detect intent
-    # -------------------------------------------------
+   
 
     intent = detect_intent(query)
 
     print("\nQUERY:", query)
     print("INTENT:", intent)
 
-    # -------------------------------------------------
-    # CLARIFICATION
-    # -------------------------------------------------
 
     if intent == "clarify":
 
@@ -143,9 +116,7 @@ def generate_recommendations(query):
             "end_of_conversation": False
         }
 
-    # -------------------------------------------------
-    # OUT OF SCOPE
-    # -------------------------------------------------
+  
 
     if intent == "out_of_scope":
 
@@ -155,38 +126,27 @@ def generate_recommendations(query):
             "end_of_conversation": False
         }
 
-    # -------------------------------------------------
-    # COMPARE
-    # -------------------------------------------------
 
     if intent == "compare":
 
         return compare_assessments(query)
 
-    # -------------------------------------------------
-    # RETRIEVE RESULTS
-    # -------------------------------------------------
+
 
     results = search_assessments(
         query=query,
         top_k=15
     )
 
-    # -------------------------------------------------
-    # FILTER + RANK
-    # -------------------------------------------------
+  
 
     results = filter_results(results, query)
 
-    # -------------------------------------------------
-    # LIMIT RESULTS
-    # -------------------------------------------------
+   
 
     results = results[:5]
 
-    # -------------------------------------------------
-    # BUILD RECOMMENDATIONS
-    # -------------------------------------------------
+    
 
     recommendations = []
 
@@ -202,9 +162,6 @@ def generate_recommendations(query):
 
         })
 
-    # -------------------------------------------------
-    # EMPTY RESULTS
-    # -------------------------------------------------
 
     if not recommendations:
 
@@ -214,9 +171,6 @@ def generate_recommendations(query):
             "end_of_conversation": False
         }
 
-    # -------------------------------------------------
-    # SUCCESS RESPONSE
-    # -------------------------------------------------
 
     return {
         "reply": f"I found {len(recommendations)} SHL assessments matching your requirements.",
@@ -225,9 +179,7 @@ def generate_recommendations(query):
     }
 
 
-# =========================================================
-# TEST
-# =========================================================
+
 
 if __name__ == "__main__":
 

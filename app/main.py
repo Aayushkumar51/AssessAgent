@@ -5,16 +5,11 @@ from typing import List
 from app.services.agent import conversational_agent
 
 
-# =========================================================
-# FASTAPI INIT
-# =========================================================
+
 
 app = FastAPI()
 
 
-# =========================================================
-# REQUEST SCHEMA
-# =========================================================
 
 class Message(BaseModel):
     role: str
@@ -25,9 +20,6 @@ class ChatRequest(BaseModel):
     messages: List[Message]
 
 
-# =========================================================
-# HEALTH ENDPOINT
-# =========================================================
 
 @app.get("/health")
 def health():
@@ -37,9 +29,7 @@ def health():
     }
 
 
-# =========================================================
-# CHAT ENDPOINT
-# =========================================================
+
 
 @app.post("/chat")
 def chat(request: ChatRequest):

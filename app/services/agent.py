@@ -8,16 +8,11 @@ from app.services.retriever import search_assessments
 from app.services.comparator import compare_assessments
 
 
-# =========================================================
-# LOAD ENVIRONMENT
-# =========================================================
+
 
 load_dotenv()
 
 
-# =========================================================
-# GROQ CONFIG
-# =========================================================
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -34,10 +29,6 @@ def _get_groq_client():
     _groq_client = Groq(api_key=GROQ_API_KEY)
     return _groq_client
 
-
-# =========================================================
-# SYSTEM PROMPT
-# =========================================================
 
 SYSTEM_PROMPT = """
 You are an SHL conversational assessment recommendation agent.
@@ -102,9 +93,6 @@ If out of scope:
 """
 
 
-# =========================================================
-# SAFE JSON PARSER
-# =========================================================
 
 
 def safe_json_parse(text):
@@ -122,18 +110,12 @@ def safe_json_parse(text):
     return json.loads(text)
 
 
-# =========================================================
-# RULE-BASED FALLBACK
-# =========================================================
 
 
 def fallback_agent(conversation_text):
 
     query = conversation_text.lower()
 
-    # -----------------------------------------------------
-    # COMPARE
-    # -----------------------------------------------------
 
     if "compare" in query or "difference" in query:
 
@@ -142,9 +124,7 @@ def fallback_agent(conversation_text):
             "reply": "Let me compare those SHL assessments for you."
         }
 
-    # -----------------------------------------------------
-    # CLARIFY
-    # -----------------------------------------------------
+
 
     if (
         len(query.split()) <= 3
@@ -161,9 +141,6 @@ def fallback_agent(conversation_text):
             "reply": "Could you describe the role, required skills, or seniority level you are hiring for?"
         }
 
-    # -----------------------------------------------------
-    # OUT OF SCOPE
-    # -----------------------------------------------------
 
     if (
         "legal" in query
@@ -177,10 +154,7 @@ def fallback_agent(conversation_text):
             "reply": "I can only help with SHL assessment recommendations and comparisons."
         }
 
-    # -----------------------------------------------------
-    # DEFAULT RECOMMEND
-    # -----------------------------------------------------
-
+    
     return {
         "intent": "recommend",
         "reply": "Based on your hiring requirement, I found some relevant SHL assessments.",
@@ -188,9 +162,7 @@ def fallback_agent(conversation_text):
     }
 
 
-# =========================================================
-# AGENT THINKING
-# =========================================================
+
 
 
 def run_agent(conversation_text):
@@ -239,9 +211,7 @@ def run_agent(conversation_text):
         return fallback_agent(conversation_text)
 
 
-# =========================================================
-# BUILD RECOMMENDATIONS
-# =========================================================
+
 
 
 def build_recommendations(results):
@@ -259,9 +229,6 @@ def build_recommendations(results):
     return recommendations
 
 
-# =========================================================
-# MAIN CONVERSATIONAL AGENT
-# =========================================================
 
 
 def conversational_agent(conversation_text):
@@ -271,9 +238,7 @@ def conversational_agent(conversation_text):
     print("=" * 60)
     print(conversation_text)
 
-    # -----------------------------------------------------
-    # AGENT REASONING
-    # -----------------------------------------------------
+    
 
     agent_output = run_agent(conversation_text)
 
@@ -289,10 +254,7 @@ def conversational_agent(conversation_text):
 
     print("DETECTED INTENT:", intent)
 
-    # -----------------------------------------------------
-    # CLARIFY
-    # -----------------------------------------------------
-
+   
     if intent == "clarify":
 
         return {
@@ -301,9 +263,7 @@ def conversational_agent(conversation_text):
             "end_of_conversation": False
         }
 
-    # -----------------------------------------------------
-    # OUT OF SCOPE
-    # -----------------------------------------------------
+
 
     if intent == "out_of_scope":
 
@@ -313,18 +273,12 @@ def conversational_agent(conversation_text):
             "end_of_conversation": False
         }
 
-    # -----------------------------------------------------
-    # COMPARE
-    # -----------------------------------------------------
 
     if intent == "compare":
 
         return compare_assessments(conversation_text)
 
-    # -----------------------------------------------------
-    # RETRIEVE ASSESSMENTS
-    # -----------------------------------------------------
-
+ 
     search_query = agent_output.get(
         "search_query",
         conversation_text
@@ -339,9 +293,6 @@ def conversational_agent(conversation_text):
 
     recommendations = build_recommendations(results)
 
-    # -----------------------------------------------------
-    # EMPTY RESULTS
-    # -----------------------------------------------------
 
     if not recommendations:
 
@@ -351,9 +302,7 @@ def conversational_agent(conversation_text):
             "end_of_conversation": False
         }
 
-    # -----------------------------------------------------
-    # SUCCESS RESPONSE
-    # -----------------------------------------------------
+    
 
     return {
         "reply": reply,

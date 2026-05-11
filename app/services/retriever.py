@@ -5,9 +5,7 @@ import faiss
 import numpy as np
 
 
-# =========================================================
-# PATHS
-# =========================================================
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,9 +18,6 @@ VECTORIZER_PATH = VECTORSTORE_DIR / "tfidf_vectorizer.pkl"
 METADATA_PATH = VECTORSTORE_DIR / "metadata.pkl"
 
 
-# =========================================================
-# LOAD VECTORSTORE
-# =========================================================
 
 print("\nLoading FAISS index...\n")
 
@@ -45,9 +40,6 @@ with open(METADATA_PATH, "rb") as f:
 print("Metadata loaded.\n")
 
 
-# =========================================================
-# SEARCH FUNCTION
-# =========================================================
 
 def search_assessments(query, top_k=5):
 
@@ -85,9 +77,7 @@ def search_assessments(query, top_k=5):
     return results
 
 
-# =========================================================
-# TEST
-# =========================================================
+
 
 if __name__ == "__main__":
 

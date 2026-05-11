@@ -1,4 +1,4 @@
-# app/services/conversation.py
+
 
 COMPARE_KEYWORDS = [
     "difference",
@@ -26,41 +26,30 @@ OUT_OF_SCOPE_KEYWORDS = [
 ]
 
 
-# =========================================================
-# DETECT INTENT
-# =========================================================
+
 
 def detect_intent(query: str):
 
     query_lower = query.lower()
 
-    # -----------------------------------------------------
-    # COMPARE
-    # -----------------------------------------------------
+    
 
     for word in COMPARE_KEYWORDS:
         if word in query_lower:
             return "compare"
 
-    # -----------------------------------------------------
-    # REFINE
-    # -----------------------------------------------------
+    
 
     for word in REFINE_KEYWORDS:
         if word in query_lower:
             return "refine"
 
-    # -----------------------------------------------------
-    # OUT OF SCOPE
-    # -----------------------------------------------------
+  
 
     for word in OUT_OF_SCOPE_KEYWORDS:
         if word in query_lower:
             return "out_of_scope"
 
-    # -----------------------------------------------------
-    # CLARIFICATION
-    # -----------------------------------------------------
 
     if len(query_lower.split()) < 4:
         return "clarify"
@@ -76,16 +65,12 @@ def detect_intent(query: str):
         if phrase in query_lower:
             return "clarify"
 
-    # -----------------------------------------------------
-    # DEFAULT
-    # -----------------------------------------------------
+  
 
     return "recommend"
 
 
-# =========================================================
-# GENERATE CLARIFICATION QUESTION
-# =========================================================
+
 
 def generate_clarification(query: str):
 
@@ -100,9 +85,7 @@ def generate_clarification(query: str):
     return "Can you provide more details about the role and required skills?"
 
 
-# =========================================================
-# TEST
-# =========================================================
+
 
 if __name__ == "__main__":
 

@@ -1,5 +1,4 @@
-# Render Blueprint: https://render.com/docs/blueprint-spec
-# Root Directory: leave default (repo root). Do not set to "app" or imports break.
+
 
 services:
   - type: web

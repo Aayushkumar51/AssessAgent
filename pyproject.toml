@@ -1,7 +1,7 @@
 [project]
-name = "shl-assesment"
+name = "Asses-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "Built an AI-powered SHL Assessment Recommender using FastAPI, LangChain, Sentence Transformers, and FAISS to provide contextual assessment recommendations through conversational RAG-based retrieval."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
